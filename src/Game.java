@@ -3,8 +3,10 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -38,14 +40,14 @@ public class Game extends JPanel implements KeyListener, Runnable {
 		setBackground(Color.WHITE);
 		thread = new Thread(this);
 		addKeyListener(this);
-		snareHits.add(28);
-		snareHits.add(50);
-		bassHits.add(15);
-		bassHits.add(24);
-		bassHits.add(33);
-		bassHits.add(44);
-		bassHits.add(47);
-		bassHits.add(57);
+		//snareHits.add(28);
+		//snareHits.add(50);
+		//bassHits.add(15);
+		//bassHits.add(24);
+		//bassHits.add(33);
+		//bassHits.add(44);
+		//bassHits.add(47);
+		//bassHits.add(57);
 	}
 
 	public void paintComponent(Graphics g) {
@@ -72,41 +74,29 @@ public class Game extends JPanel implements KeyListener, Runnable {
 		if (cursorX == snareHits.get(snareDrumTrackCounter)) {
 			try {
 				snare = new Sound("snare.wav");
+				if (cursorX == snareHits.get(snareDrumTrackCounter))
+					snare.play();
+				if (snare.isRunning()) {
+					snare = new Sound("snare.wav");
+				}
+				if (snareDrumTrackCounter < snareHits.size() - 1)
+					snareDrumTrackCounter++;
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
-			if (playSound) {
-				try {
-					if (cursorX == snareHits.get(snareDrumTrackCounter))
-						snare.play();
-					if (snare.isRunning()) {
-						snare = new Sound("snare.wav");
-					}
-					if (snareDrumTrackCounter < snareHits.size() - 1)
-						snareDrumTrackCounter++;
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 			}
 		}
 		if (cursorX == bassHits.get(bassDrumTrackCounter)) {
 			try {
 				bass = new Sound("bass.wav");
+				if (cursorX == bassHits.get(bassDrumTrackCounter))
+					bass.play();
+				if (bass.isRunning()) {
+					bass = new Sound("bass.wav");
+				}
+				if (bassDrumTrackCounter < bassHits.size() - 1)
+					bassDrumTrackCounter++;
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
-			if (playSound) {
-				try {
-					if (cursorX == bassHits.get(bassDrumTrackCounter))
-						bass.play();
-					if (bass.isRunning()) {
-						bass = new Sound("bass.wav");
-					}
-					if (bassDrumTrackCounter < bassHits.size() - 1)
-						bassDrumTrackCounter++;
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 			}
 		}
 	}
@@ -171,6 +161,7 @@ public class Game extends JPanel implements KeyListener, Runnable {
 	public static void main(String[] args) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
 		Game game = new Game();
 		JFrame application = new JFrame();
+		game.readFile();
 		game.snare = new Sound("snare.wav");
 		game.bass = new Sound("bass.wav");
 		application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -192,5 +183,51 @@ public class Game extends JPanel implements KeyListener, Runnable {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void readFile() throws IOException {
+		String line = "";
+		try {
+            Scanner input = new Scanner(System.in);
+            File file = new File("/Users/Anthony/Desktop/Main/ECLIPSE/Hazzle-Music/output2.txt");
+            input = new Scanner(file);
+            while (input.hasNextLine()) {
+            	int bassStart = 0;
+            	int bassEnd = 0;
+            	String bassHitsString = "";
+                line = input.nextLine();
+                int snareStart = line.indexOf("/");
+                int snareEnd = line.indexOf("/", 1);
+                String snareHitsString = line.substring((snareStart + 1), (snareEnd - 1));
+                if (line.indexOf("/", snareEnd + 1) != -1) { 
+                	bassStart = line.indexOf("/", snareEnd + 1); 
+                	bassEnd = line.indexOf("/", bassStart + 1);
+                	bassHitsString = line.substring((bassStart + 1), (bassEnd - 1));
+                } else {
+                	bassHitsString = line.substring(snareEnd + 1, line.length() - 1); 
+                }
+                System.out.println(line);
+                //System.out.println(snareHits);
+                //System.out.println(bassHits);
+                String[] snareNumbers = snareHitsString.split(",");
+                //System.out.println("Number to be added: " + numbers[0]);
+                for (int j = 0; j < snareNumbers.length; j++) {
+                	int value = Integer.parseInt(snareNumbers[j]);
+               		snareHits.add(value);
+               	}
+             
+                String[] bassNumbers = bassHitsString.split(",");
+                	for (int j = 0; j < bassNumbers.length; j++) {
+                		int value = Integer.parseInt(bassNumbers[j]);
+                		bassHits.add(value);
+                	}
+                }
+           
+            System.out.println(snareHits);
+            System.out.println(bassHits);
+            input.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 	}
 }
