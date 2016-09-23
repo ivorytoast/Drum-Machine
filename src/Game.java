@@ -28,7 +28,6 @@ public class Game extends JPanel implements KeyListener, Runnable {
 	int cursorX = 0;
 	ArrayList<Integer> snareHits = new ArrayList<Integer>();
 	ArrayList<Integer> bassHits = new ArrayList<Integer>();
-	//int[] bassHits = {100, 150, 200, 250, 300, 350, 400, 450, 500};
 	int snareDrumTrackCounter = 0;
 	int bassDrumTrackCounter = 0;
 	int cursorHeight = 100;
@@ -40,14 +39,6 @@ public class Game extends JPanel implements KeyListener, Runnable {
 		setBackground(Color.WHITE);
 		thread = new Thread(this);
 		addKeyListener(this);
-		//snareHits.add(28);
-		//snareHits.add(50);
-		//bassHits.add(15);
-		//bassHits.add(24);
-		//bassHits.add(33);
-		//bassHits.add(44);
-		//bassHits.add(47);
-		//bassHits.add(57);
 	}
 
 	public void paintComponent(Graphics g) {
@@ -148,15 +139,7 @@ public class Game extends JPanel implements KeyListener, Runnable {
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-		/*
-		 * if (e.getKeyCode() == KeyEvent.VK_W) { System.out.println("Up");
-		 * playerOneY = playerOneY - 25; repaint(); } if (e.getKeyCode() ==
-		 * KeyEvent.VK_A) { System.out.println("Left"); } if (e.getKeyCode() ==
-		 * KeyEvent.VK_D) { System.out.println("Right"); } if (e.getKeyCode() ==
-		 * KeyEvent.VK_S) { System.out.println("Down"); }
-		 */
-	}
+	public void keyReleased(KeyEvent e) {}
 
 	public static void main(String[] args) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
 		Game game = new Game();
@@ -207,10 +190,7 @@ public class Game extends JPanel implements KeyListener, Runnable {
                 	bassHitsString = line.substring(snareEnd + 1, line.length() - 1); 
                 }
                 System.out.println(line);
-                //System.out.println(snareHits);
-                //System.out.println(bassHits);
                 String[] snareNumbers = snareHitsString.split(",");
-                //System.out.println("Number to be added: " + numbers[0]);
                 for (int j = 0; j < snareNumbers.length; j++) {
                 	int value = Integer.parseInt(snareNumbers[j]);
                		snareHits.add(value);
